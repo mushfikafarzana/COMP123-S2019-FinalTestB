@@ -6,6 +6,12 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+/*
+ * Student Name: Mushfika Farzana
+ * Student ID: 301051702
+ * Description: This is the Character Generator Form - the main form of the application
+  */
+
 namespace COMP123_S2019_FinalTestB.Views
 {
     public partial class CharacterGeneratorForm : MasterForm
@@ -13,6 +19,38 @@ namespace COMP123_S2019_FinalTestB.Views
         public CharacterGeneratorForm()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// this is the event handler for the Back button Click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            if (MainTabControl.SelectedIndex != 0)
+            {
+                MainTabControl.SelectedIndex --;
+            }
+        }
+
+
+        /// <summary>
+        /// this is the event handler for the Next button Click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NextButton_Click(object sender, EventArgs e)
+        {
+            if (MainTabControl.SelectedIndex < MainTabControl.TabPages.Count - 1)
+            {
+                MainTabControl.SelectedIndex ++;
+            }
+        }
+
+        private void AbilitiesTableLayoutPanel_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
