@@ -14,7 +14,12 @@ using System.Threading.Tasks;
 namespace COMP123_S2019_FinalTestB.Objects
 {
    public class Character
+
     {
+        // Identity
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
         // Character Abilities
         public string Strength { get; set; }
         public string Dexterity { get; set; }
