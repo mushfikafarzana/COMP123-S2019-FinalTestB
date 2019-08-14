@@ -19,6 +19,7 @@ namespace COMP123_S2019_FinalTestB.Views
     {
         string[] FirstNameList;
         string[] LastNameList;
+        string[] InventoryList;
         Random random = new Random();
         public CharacterGeneratorForm()
         {
@@ -40,6 +41,8 @@ namespace COMP123_S2019_FinalTestB.Views
 
             FirstNameDataLabel.Text = Program.character.FirstName;
             LastNameDataLabel.Text = Program.character.LastName;
+
+            CharacterNameTextBox.Text = FirstName + " " + LastName;
         }
         /// <summary>
         /// this is the event handler for the Back button Click event
@@ -77,6 +80,7 @@ namespace COMP123_S2019_FinalTestB.Views
         {
             LoadNames();
             GenerateNames();
+            LoadInventory();
         }
 
         /// <summary>
@@ -89,6 +93,65 @@ namespace COMP123_S2019_FinalTestB.Views
             GenerateNames();
             Program.character.FirstName = FirstNameDataLabel.Text;
             Program.character.LastName = LastNameDataLabel.Text;
+        }
+
+        /// <summary>
+        /// this is the event handler for the GenerateAbilitiesButton's Click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GenerateAbilitiesButton_Click(object sender, EventArgs e)
+        {
+            int strength = random.Next(3, 18);
+            Program.character.Strength = strength.ToString();
+            StrengthDataLabel.Text = Program.character.Strength;
+            int dexterity = random.Next(3, 18);
+            Program.character.Dexterity = dexterity.ToString();
+            DexterityDataLabel.Text = Program.character.Dexterity;
+            int constitution = random.Next(3, 18);
+            Program.character.Constitution = constitution.ToString();
+            ConstitutionDataLabel.Text = Program.character.Constitution;
+            int intelligence = random.Next(3, 18);
+            Program.character.Intelligence = intelligence.ToString();
+            IntelligenceDataLabel.Text = Program.character.Intelligence;
+            int wisdom = random.Next(3, 18);
+            Program.character.Wisdom = wisdom.ToString();
+            WisdomDataLabel.Text = Program.character.Wisdom;
+            int charisma = random.Next(3, 18);
+            Program.character.Charisma = charisma.ToString();
+            CharismaDataLabel.Text = Program.character.Charisma;
+        }
+
+        // this method loads inventory 
+        public void LoadInventory()
+        {
+            InventoryList = File.ReadAllLines("..\\..\\Data\\inventory.txt");
+        }
+
+        // method that randomly generate inventory
+        private void GenerateRandomInventory()
+        {
+            List<string> InventoryList;
+            InventoryList = new List<string>(File.ReadAllLines("inventory.txt"));
+            string firstItem = InventoryList[random.Next(InventoryList.Count)];
+            string secondItem = InventoryList[random.Next(InventoryList.Count)];
+            string thirdItem = InventoryList[random.Next(InventoryList.Count)];
+            string fourthItem = InventoryList[random.Next(InventoryList.Count)];
+            inventory1Label.Text = firstItem;
+            inventory2Label.Text = secondItem;
+            inventory3Label.Text = thirdItem;
+            inventory4Label.Text = fourthItem;
+
+        }
+
+        /// <summary>
+        /// this is the event handler for the GenerateInventoryButton's Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GenerateInventoryButton_Click(object sender, EventArgs e)
+        {
+            GenerateRandomInventory();
         }
 
         /// <summary>
@@ -111,18 +174,109 @@ namespace COMP123_S2019_FinalTestB.Views
             Program.aboutBox.ShowDialog();
         }
 
+        /// <summary>
+        /// This is the shared event handler for the openToolStripMenuItem and saveMenuStripButton click event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            CharaterSheetOpenFileDialog.FileName = "character.txt";
+            CharaterSheetOpenFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+            CharaterSheetOpenFileDialog.Filter = "Text Files (*.txt)|*.txt| All Files (*.*)|*.*";
+            var result = CharaterSheetOpenFileDialog.ShowDialog();
+            if (result != DialogResult.Cancel)
+            {
+                try
+                {
+                    // Open the  streawm for reading
+                    using (StreamReader inputStream = new StreamReader(
+                        File.Open(CharaterSheetOpenFileDialog.FileName, FileMode.Open)))
+                    {
+                        // read from the file
+                        Program.character.FirstName = inputStream.ReadLine();
+                        Program.character.LastName = inputStream.ReadLine();
+                        Program.character.Strength = inputStream.ReadLine();
+                        Program.character.Dexterity = inputStream.ReadLine();
+                        Program.character.Constitution = inputStream.ReadLine();
+                        Program.character.Intelligence = inputStream.ReadLine();
+                        Program.character.Wisdom = inputStream.ReadLine();
+                        Program.character.Charisma = inputStream.ReadLine();
 
+                        // cleanup
+                        inputStream.Close();
+                        inputStream.Dispose();
+
+
+                    }
+                    FirstNameDataLabel.Text = Program.character.FirstName;
+                    LastNameDataLabel.Text = Program.character.LastName;
+                    StrengthDataLabel.Text = Program.character.Strength;
+                    DexterityDataLabel.Text = Program.character.Dexterity;
+                    ConstitutionDataLabel.Text = Program.character.Constitution;
+                    IntelligenceDataLabel.Text = Program.character.Intelligence;
+                    WisdomDataLabel.Text = Program.character.Wisdom;
+                    CharismaDataLabel.Text = Program.character.Charisma;
+                    NextButton_Click(sender, e);
+                }
+                catch (IOException exception)
+                {
+
+                    MessageBox.Show("ERROR: " + exception.Message, "ERROR",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (FormatException exception)
+                {
+                    MessageBox.Show("ERROR: " + exception.Message + "\n\nPlease select the appropriate file type", "ERROR",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
+    }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+    /// <summary>
+    /// This is the shared event handler for the SaveToolStripMenuItem and saveMenuStripButton click event
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            CharaterSheetSaveFileDialog.FileName = "character.txt";
+            CharaterSheetSaveFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+            CharaterSheetSaveFileDialog.Filter = "Text Files (*.txt)|*.txt| All Files (*.*)|*.*";
 
+
+            var result = CharaterSheetSaveFileDialog.ShowDialog();
+            if (result != DialogResult.Cancel)
+            {
+                using (StreamWriter outputStream = new StreamWriter(
+                    File.Open(CharaterSheetSaveFileDialog.FileName, FileMode.Create)))
+                {
+
+                    outputStream.WriteLine(Program.character.FirstName);
+                    outputStream.WriteLine(Program.character.LastName);
+                    outputStream.WriteLine(Program.character.Strength);
+                    outputStream.WriteLine(Program.character.Dexterity);
+                    outputStream.WriteLine(Program.character.Constitution);
+                    outputStream.WriteLine(Program.character.Intelligence);
+                    outputStream.WriteLine(Program.character.Wisdom);
+                    outputStream.WriteLine(Program.character.Charisma);
+                    outputStream.Close();
+                    outputStream.Dispose();
+                    MessageBox.Show("File Saved...", "Saving File...",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
         }
+        /// <summary>
+        /// This method generate random characters names based on names list from files
+        /// </summary>
+    }
 
-       
+    
+
+        
     }
 }

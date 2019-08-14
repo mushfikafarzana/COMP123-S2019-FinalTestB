@@ -16,7 +16,6 @@ namespace COMP123_S2019_FinalTestB
 {
     static class Program
     {
-        //public static MasterForm masterForm;
         public static CharacterGeneratorForm characterForm;
         public static Character character;
         public static AboutBox aboutBox;
@@ -29,8 +28,6 @@ namespace COMP123_S2019_FinalTestB
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            //masterForm = new MasterForm();
 
             characterForm = new CharacterGeneratorForm();
             character = new Character();
